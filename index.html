@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Voice Orb</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oriwa Voice Orb</title>
+
   <style>
     body {
       margin: 0;
-      padding: 0;
       background: #000;
-      color: white;
-      font-family: sans-serif;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      overflow: hidden;
     }
-    .orb {
+
+    .orb-button {
       width: 200px;
       height: 200px;
       border-radius: 50%;
@@ -26,8 +26,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: 3rem;
+      color: white;
       cursor: pointer;
+      text-decoration: none;
     }
+
     @keyframes pulse {
       0% {
         transform: scale(1);
@@ -44,54 +48,11 @@
     }
   </style>
 </head>
+
 <body>
-  <div class="orb" id="recordButton">
+  <!-- Orb button that links to full-screen ElevenLabs agent -->
+  <a class="orb-button" href="https://elevenlabs.io/convai/agent/qIZPCQ6xjHQrI1Wa2zw6" target="_blank" title="Talk to Oriwa">
     🎤
-  </div>
-
-  <script>
-    const recordButton = document.getElementById('recordButton');
-    let mediaRecorder;
-    let audioChunks = [];
-
-    recordButton.addEventListener('click', async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(stream);
-      audioChunks = [];
-
-      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-
-        // TODO: Replace this with actual Whisper STT
-        const text = 'Kia ora! This is a demo response.'; // Pretend STT result
-
-        // Send to ElevenLabs for TTS
-        const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/YOUR_VOICE_ID', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'xi-api-key': 'YOUR_API_KEY'
-          },
-          body: JSON.stringify({
-            text,
-            model_id: 'eleven_monolingual_v1',
-            voice_settings: {
-              stability: 0.5,
-              similarity_boost: 0.7
-            }
-          })
-        });
-
-        const audioData = await response.blob();
-        const audioURL = URL.createObjectURL(audioData);
-        const audio = new Audio(audioURL);
-        audio.play();
-      };
-
-      mediaRecorder.start();
-      setTimeout(() => mediaRecorder.stop(), 4000); // Record for 4 seconds
-    });
-  </script>
+  </a>
 </body>
 </html>
