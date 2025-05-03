@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<!-- Other head stuff... -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oriwa Voice Orb</title>
+
   <style>
+    /* Fullscreen background */
     #voice-orb-container {
       position: fixed;
       top: 0;
@@ -16,95 +20,90 @@
       z-index: 9999;
     }
 
+    /* Glowing orb wrapper */
     #voice-orb {
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      background: radial-gradient(circle, #4fd1c5, #285e61);
-      box-shadow: 0 0 40px rgba(79, 209, 197, 0.7);
+      background: radial-gradient(circle at center, #4fd1c5, #285e61);
+      box-shadow: 0 0 60px 20px rgba(79, 209, 197, 0.6);
+      animation: pulse 2s infinite ease-in-out;
       display: flex;
       justify-content: center;
       align-items: center;
-      animation: pulse 2s infinite ease-in-out;
-    }
-
-    #voice-orb iframe {
-      width: 100px;
-      height: 100px;
-      border: none;
-      border-radius: 50%;
     }
 
     @keyframes pulse {
       0% {
         transform: scale(1);
-        box-shadow: 0 0 40px rgba(79, 209, 197, 0.7);
+        box-shadow: 0 0 60px 20px rgba(79, 209, 197, 0.4);
       }
       50% {
         transform: scale(1.1);
-        box-shadow: 0 0 60px rgba(79, 209, 197, 1);
+        box-shadow: 0 0 90px 30px rgba(79, 209, 197, 0.7);
       }
       100% {
         transform: scale(1);
-        box-shadow: 0 0 40px rgba(79, 209, 197, 0.7);
+        box-shadow: 0 0 60px 20px rgba(79, 209, 197, 0.4);
       }
     }
   </style>
 </head>
-<body>
-  <!-- Your existing site content -->
 
-  <!-- ORB: Start -->
+<body>
+  <!-- ORB: Fullscreen Voice UI -->
   <div id="voice-orb-container">
     <div id="voice-orb">
-      <!-- Replace this with your ElevenLabs widget/embed code -->
-      <iframe src="<elevenlabs-convai agent-id="qIZPCQ6xjHQrI1Wa2zw6"></elevenlabs-convai><script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>" allow="microphone" frameborder="0"></iframe>
+      <elevenlabs-convai 
+        agent-id="qIZPCQ6xjHQrI1Wa2zw6"
+        variant="full"
+        expandable="always"
+        show-avatar="true"
+        background-color="#ffffff"
+        text-color="#000000"
+        button-color="#000000"
+        button-text-color="#ffffff"
+        border-color="#e1e1e1"
+        focus-outline-color="#000000"
+        card-radius="100"
+        button-radius="100"
+      ></elevenlabs-convai>
     </div>
   </div>
-  <!-- ORB: End -->
 
-</body>
+  <!-- ElevenLabs script -->
+  <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
 
-    <div id="widget-container">
-        <!-- Note: added all the parameters from the configuration you showed -->
-        <elevenlabs-convai 
-            agent-id="qIZPCQ6xjHQrI1Wa2zw6"
-            variant="full"
-            expandable="always"
-            show-avatar="true"
-            background-color="#ffffff"
-            text-color="#000000"
-            button-color="#000000"
-            button-text-color="#ffffff"
-            border-color="#e1e1e1"
-            focus-outline-color="#000000"
-            card-radius="100"
-            button-radius="100"
-        ></elevenlabs-convai>
-    </div>
+  <!-- Reposition the widget inside orb -->
+  <script>
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        const widget = document.querySelector('elevenlabs-convai');
 
-    <!-- Load script after the element is defined -->
-    <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
-    
-    <!-- Force widget to open in expanded state on load -->
-    <script>
-        window.addEventListener('load', function() {
-            // Short delay to ensure widget is loaded
-            setTimeout(function() {
-                // Force widget to maximize/expand
-                const widgetElement = document.querySelector('elevenlabs-convai');
-                if (widgetElement) {
-                    // Try to find and click the expand button if it exists
-                    const expandButtons = document.querySelectorAll('button');
-                    expandButtons.forEach(button => {
-                        if (button.innerText.includes('Chat') || 
-                            button.getAttribute('aria-label')?.includes('expand')) {
-                            button.click();
-                        }
-                    });
-                }
-            }, 1000);
+        // Reposition widget inside the orb
+        if (widget && widget.shadowRoot) {
+          const style = document.createElement('style');
+          style.textContent = `
+            :host {
+              width: 100px !important;
+              height: 100px !important;
+              border-radius: 50% !important;
+              overflow: hidden !important;
+            }
+          `;
+          widget.shadowRoot.appendChild(style);
+        }
+
+        // Optionally auto-expand the widget
+        const expandButtons = document.querySelectorAll('button');
+        expandButtons.forEach(button => {
+          if (button.innerText.includes('Chat') ||
+            button.getAttribute('aria-label')?.includes('expand')) {
+            button.click();
+          }
         });
-    </script>
+      }, 1500);
+    });
+  </script>
 </body>
 </html>
