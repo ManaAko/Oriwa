@@ -2,26 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Oriwa Voice Orb</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Voice Orb</title>
   <style>
-    /* Fullscreen background container */
-    #voice-orb-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.9);
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: white;
+      font-family: sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
+      height: 100vh;
     }
-
-    /* Orb effect */
-    #voice-orb {
+    .orb {
       width: 200px;
       height: 200px;
       border-radius: 50%;
@@ -31,8 +26,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
     }
-
     @keyframes pulse {
       0% {
         transform: scale(1);
@@ -49,70 +44,53 @@
     }
   </style>
 </head>
-
 <body>
-  <div id="voice-orb-container">
-    <div id="voice-orb">
-      <!-- ElevenLabs widget -->
-      <elevenlabs-convai 
-        agent-id="qIZPCQ6xjHQrI1Wa2zw6"
-        variant="full"
-        expandable="always"
-        show-avatar="true"
-        background-color="#ffffff"
-        text-color="#000000"
-        button-color="#000000"
-        button-text-color="#ffffff"
-        border-color="#e1e1e1"
-        focus-outline-color="#000000"
-        card-radius="100"
-        button-radius="100"
-      ></elevenlabs-convai>
-    </div>
+  <div class="orb" id="recordButton">
+    🎤
   </div>
 
-  <!-- Load widget script -->
-  <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
-
-  <!-- Inject style override into shadow DOM -->
   <script>
-    window.addEventListener('load', function () {
-      setTimeout(function () {
-        const widget = document.querySelector('elevenlabs-convai');
+    const recordButton = document.getElementById('recordButton');
+    let mediaRecorder;
+    let audioChunks = [];
 
-        // Inject CSS to override ElevenLabs default positioning
-        if (widget && widget.shadowRoot) {
-          const style = document.createElement('style');
-          style.textContent = `
-            :host {
-              all: unset !important;
-              display: block !important;
-              position: static !important;
-              margin: 0 auto !important;
-              width: 100px !important;
-              height: 100px !important;
-              border-radius: 50% !important;
-              overflow: hidden !important;
-              z-index: 9999 !important;
+    recordButton.addEventListener('click', async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+
+        // TODO: Replace this with actual Whisper STT
+        const text = 'Kia ora! This is a demo response.'; // Pretend STT result
+
+        // Send to ElevenLabs for TTS
+        const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/YOUR_VOICE_ID', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'xi-api-key': 'YOUR_API_KEY'
+          },
+          body: JSON.stringify({
+            text,
+            model_id: 'eleven_monolingual_v1',
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.7
             }
-
-            ::slotted(*) {
-              width: 100%;
-              height: 100%;
-            }
-          `;
-          widget.shadowRoot.appendChild(style);
-        }
-
-        // Force open if needed (may not be necessary)
-        const expandButtons = document.querySelectorAll('button');
-        expandButtons.forEach(button => {
-          if (button.innerText.includes('Chat') ||
-              button.getAttribute('aria-label')?.includes('expand')) {
-            button.click();
-          }
+          })
         });
-      }, 1500);
+
+        const audioData = await response.blob();
+        const audioURL = URL.createObjectURL(audioData);
+        const audio = new Audio(audioURL);
+        audio.play();
+      };
+
+      mediaRecorder.start();
+      setTimeout(() => mediaRecorder.stop(), 4000); // Record for 4 seconds
     });
   </script>
 </body>
