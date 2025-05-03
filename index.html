@@ -6,7 +6,7 @@
   <title>Oriwa Voice Orb</title>
 
   <style>
-    /* Fullscreen background */
+    /* Fullscreen background container */
     #voice-orb-container {
       position: fixed;
       top: 0;
@@ -20,7 +20,7 @@
       z-index: 9999;
     }
 
-    /* Glowing orb wrapper */
+    /* Orb effect */
     #voice-orb {
       width: 200px;
       height: 200px;
@@ -51,9 +51,9 @@
 </head>
 
 <body>
-  <!-- ORB: Fullscreen Voice UI -->
   <div id="voice-orb-container">
     <div id="voice-orb">
+      <!-- ElevenLabs widget -->
       <elevenlabs-convai 
         agent-id="qIZPCQ6xjHQrI1Wa2zw6"
         variant="full"
@@ -71,34 +71,44 @@
     </div>
   </div>
 
-  <!-- ElevenLabs script -->
+  <!-- Load widget script -->
   <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
 
-  <!-- Reposition the widget inside orb -->
+  <!-- Inject style override into shadow DOM -->
   <script>
     window.addEventListener('load', function () {
       setTimeout(function () {
         const widget = document.querySelector('elevenlabs-convai');
 
-        // Reposition widget inside the orb
+        // Inject CSS to override ElevenLabs default positioning
         if (widget && widget.shadowRoot) {
           const style = document.createElement('style');
           style.textContent = `
             :host {
+              all: unset !important;
+              display: block !important;
+              position: static !important;
+              margin: 0 auto !important;
               width: 100px !important;
               height: 100px !important;
               border-radius: 50% !important;
               overflow: hidden !important;
+              z-index: 9999 !important;
+            }
+
+            ::slotted(*) {
+              width: 100%;
+              height: 100%;
             }
           `;
           widget.shadowRoot.appendChild(style);
         }
 
-        // Optionally auto-expand the widget
+        // Force open if needed (may not be necessary)
         const expandButtons = document.querySelectorAll('button');
         expandButtons.forEach(button => {
           if (button.innerText.includes('Chat') ||
-            button.getAttribute('aria-label')?.includes('expand')) {
+              button.getAttribute('aria-label')?.includes('expand')) {
             button.click();
           }
         });
