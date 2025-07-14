@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Oriwa Chat</title>
+  <meta charset="UTF-8">
+  <title>Kōrero with Oriwa</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      background: transparent;
       overflow: hidden;
     }
 
@@ -16,24 +17,15 @@
       bottom: 20px;
       right: 20px;
       z-index: 9999;
-      max-height: 90vh;
       width: 360px;
+      max-height: 90vh;
       overflow: visible;
     }
   </style>
 </head>
 <body>
+  <!-- ONLY the widget -->
   <elevenlabs-convai agent-id="qIZPCQ6xjHQrI1Wa2zw6"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 </body>
 </html>
-
-    document.getElementById("start-chat").addEventListener("click", function(e) {
-      e.preventDefault();
-      document.getElementById("oriwa-widget").style.display = "block";
-    });
-  </script>
-
-</body>
-</html>
-
