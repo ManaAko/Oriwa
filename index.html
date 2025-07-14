@@ -1,26 +1,47 @@
-<elevenlabs-convai agent-id="qIZPCQ6xjHQrI1Wa2zw6"></elevenlabs-convai><script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-<style>
-  elevenlabs-convai {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    max-height: 90vh;
-    overflow: visible;
-  }
-
-  /* Prevent parent containers from clipping it */
-  body, html {
-    overflow: visible !important;
-    height: 100% !important;
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const widget = document.querySelector('elevenlabs-convai');
-    if (widget) {
-      widget.setAttribute('open-on-load', 'true');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kōrero with Oriwa</title>
+  <style>
+    elevenlabs-convai {
+      position: fixed !important;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      max-height: 90vh;
+      width: 360px;
+      overflow: visible !important;
     }
-  });
-</script>
+
+    body, html {
+      height: 100% !important;
+      overflow: visible !important;
+    }
+
+    * {
+      overflow: visible !important;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#" id="start-chat">Click here to talk to Oriwa</a>
+
+  <elevenlabs-convai
+    id="oriwa-widget"
+    style="display: none;"
+    agent-id="qIZPCQ6xjHQrI1Wa2zw6">
+  </elevenlabs-convai>
+
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  <script>
+    document.getElementById("start-chat").addEventListener("click", function(e) {
+      e.preventDefault();
+      document.getElementById("oriwa-widget").style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
+
