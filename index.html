@@ -2,40 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Kōrero with Oriwa</title>
+  <title>Oriwa Chat</title>
   <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
     elevenlabs-convai {
-      position: fixed !important;
+      position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 9999;
       max-height: 90vh;
       width: 360px;
-      overflow: visible !important;
-    }
-
-    body, html {
-      height: 100% !important;
-      overflow: visible !important;
-    }
-
-    * {
-      overflow: visible !important;
+      overflow: visible;
     }
   </style>
 </head>
 <body>
-
-  <a href="#" id="start-chat">Click here to talk to Oriwa</a>
-
-  <elevenlabs-convai
-    id="oriwa-widget"
-    style="display: none;"
-    agent-id="qIZPCQ6xjHQrI1Wa2zw6">
-  </elevenlabs-convai>
-
+  <elevenlabs-convai agent-id="qIZPCQ6xjHQrI1Wa2zw6"></elevenlabs-convai>
   <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-  <script>
+</body>
+</html>
+
     document.getElementById("start-chat").addEventListener("click", function(e) {
       e.preventDefault();
       document.getElementById("oriwa-widget").style.display = "block";
